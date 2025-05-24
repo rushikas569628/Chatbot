@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3>💬 Personal Chatbot</h3>
+    <form action="/" method="POST">
+        <textarea class="form-control mb-2" name="user_input" rows="3" placeholder="Type your message..." required></textarea>
+        <button class="btn btn-primary" type="submit">Send</button>
+    </form>
+
+    <div class="card mt-4">
+        <div class="card-header">Chat History:</div>
+        <div class="card-body">
+            {% for message in chat_response %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <a class="btn btn-link mt-3" href="/image">🎨 Try Image Generation</a>
+</div>
+{% endblock %}

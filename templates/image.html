@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3>🖼️ Generate an Image with AI</h3>
+    <form action="/image" method="POST">
+        <textarea class="form-control mb-2" name="user_input" rows="2" placeholder="Describe your image..." required></textarea>
+        <button class="btn btn-success" type="submit">Generate</button>
+    </form>
+
+    {% if image_url %}
+    <div class="card mt-4">
+        <div class="card-header">Generated Image:</div>
+        <div class="card-body text-center">
+            <img src="{{ image_url }}" class="img-fluid" alt="AI Generated Image">
+        </div>
+    </div>
+    {% endif %}
+
+    <a class="btn btn-link mt-3" href="/">💬 Back to Chat</a>
+</div>
+{% endblock %}
