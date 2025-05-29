@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+
 app=FastAPI()
 
 books=[
@@ -12,3 +14,40 @@ books=[
 @app.get("/books")
 async def read_books():
     return books
+
+# @app.get("/books/{dynamic_param}")
+# async def read_books(dynamic_param):
+#     return {'dynamic_param':dynamic_param}
+# FastAPI treats "Title one" as a dynamic path parameter, not a title to search for.
+# It just returns that string without doing anything with the actual book data.
+"""1.
+@app.get("/books/{title}")
+async def get_book_by_title(title: str):
+    for book in books:
+        if book["title"].lower() == title.lower():
+            return book
+    return JSONResponse(status_code=404, content={"error": "Book not found"})
+"""
+"""y both at the same time will not work because traffic for the above get method goes completely so sharing of same data/traffic is not possible"""
+# 2.
+@app.get("/books/{category}")
+async def histories(category: str):
+    for cat in books:
+        if cat["category"].lower()==category.lower():
+            return cat
+    return JSONResponse(status_code=404,content={"error" : "not found"})
+"""
+o/p:
+{
+  "title": "Title one",
+  "author": "Author one",
+  "category": "science"
+}
+"""
+
+# cannot write a separate there might be an conflict occurence
+"""
+@app.get("/books/Title one")
+async def read_all_books():
+    return {'book_tile':"My Favourite Book"}
+"""
