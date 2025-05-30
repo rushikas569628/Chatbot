@@ -4,13 +4,15 @@ from openai import OpenAI
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 import os
+from dotenv import load_dotenv
 
-app = FastAPI()
-templates = Jinja2Templates(directory="templates")
-
+load_dotenv()
 # ✅ Read from Render’s environment variable directly
 api_key = os.getenv("OPENAI_API_KEY")
 openai = OpenAI(api_key=api_key)
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 chat_log = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
 chat_response = []
