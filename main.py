@@ -6,8 +6,8 @@ from fastapi.responses import HTMLResponse
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
-# ✅ Read from Render’s environment variable directly
 api_key = os.getenv("OPENAI_API_KEY")
 openai = OpenAI(api_key=api_key)
 
@@ -26,13 +26,16 @@ async def chat(request: Request, user_input: Annotated[str, Form()]):
     chat_log.append({'role': 'user', 'content': user_input})
     chat_response.append(f"You: {user_input}")
 
-    response = openai.chat.completions.create(
-        model='gpt-3.5-turbo',
-        messages=chat_log,
-        temperature=0
-    )
+    try:
+        response = openai.chat.completions.create(
+            model='gpt-3.5-turbo',
+            messages=chat_log,
+            temperature=0
+        )
+        bot_response = response.choices[0].message.content
+    except Exception as e:
+        bot_response = "⚠️ The AI is currently unavailable due to usage limits or connection issues."
 
-    bot_response = response.choices[0].message.content
     chat_log.append({'role': 'assistant', 'content': bot_response})
     chat_response.append(f"Bot: {bot_response}")
 
@@ -44,11 +47,14 @@ async def image_page(request: Request):
 
 @app.post("/image", response_class=HTMLResponse)
 async def create_image(request: Request, user_input: Annotated[str, Form()]):
-    response = openai.images.generate(
-        prompt=user_input,
-        n=1,
-        size="512x512"
-    )
-    image_url = response.data[0].url
+    try:
+        response = openai.images.generate(
+            prompt=user_input,
+            n=1,
+            size="512x512"
+        )
+        image_url = response.data[0].url
+    except Exception as e:
+        image_url = None
 
     return templates.TemplateResponse("image.html", {"request": request, "image_url": image_url})
