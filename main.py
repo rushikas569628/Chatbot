@@ -1,7 +1,6 @@
 from fastapi import FastAPI, Form, Request
 from typing import Annotated
 from openai import OpenAI
-from dotenv import load_dotenv
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 import os
@@ -9,12 +8,10 @@ import os
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-# Load .env and API key
-load_dotenv()
+# ✅ Read from Render’s environment variable directly
 api_key = os.getenv("OPENAI_API_KEY")
 openai = OpenAI(api_key=api_key)
 
-# Memory for chat
 chat_log = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
 chat_response = []
 
